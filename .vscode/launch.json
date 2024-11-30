@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch DummyClient",
+        "type": "dotnet",
+        "request": "launch",
+        "projectPath": "${workspaceFolder}/DummyClient/DummyClient.csproj",  // Add the path to the DummyClient.csproj
+        "preLaunchTask": "Run DummyClient"  // Call the task defined in tasks.json
+      },
+      {
+        "name": "Launch ServerCore",
+        "type": "dotnet",
+        "request": "launch",
+        "projectPath": "${workspaceFolder}/ServerCore/ServerCore.csproj",  // Add the path to the ServerCore.csproj
+        "preLaunchTask": "Run ServerCore"  // Call the task defined in tasks.json
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Launch Both Projects",
+        "configurations": [
+          "Launch DummyClient",
+          "Launch ServerCore"
+        ]
+      }
+    ]
+  }
+  
