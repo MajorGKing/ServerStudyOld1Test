@@ -6,15 +6,31 @@ using ServerCore;
 
 namespace DummyClient
 {
+    class Packet
+    {
+        public ushort size;
+        public ushort packetId;
+    }
+
     class GameSession : Session
     {
         public override void OnConnected(EndPoint endPoint)
         {
             System.Console.WriteLine($"OnConnected : {endPoint}");
 
+            Packet packet = new Packet() { size = 4, packetId = 7 };
+
             for (int i = 0; i < 5; i++)
             {
-                byte[] sendBuff = Encoding.UTF8.GetBytes($"Hello World! {i}");
+                // byte[] sendBuff = Encoding.UTF8.GetBytes($"Hello World! {i}");
+
+                ArraySegment<byte> openSegment = SendBufferHelper.Open(4096);
+                byte[] buffer = BitConverter.GetBytes(packet.size);
+                byte[] buffer2 = BitConverter.GetBytes(packet.packetId);
+                Array.Copy(buffer, 0, openSegment.Array, openSegment.Offset, buffer2.Length);
+                Array.Copy(buffer2, 0, openSegment.Array, openSegment.Offset + buffer.Length, buffer2.Length);
+                ArraySegment<byte> sendBuff = SendBufferHelper.Close(packet.size);
+
                 Send(sendBuff);
             }
         }
@@ -45,14 +61,14 @@ namespace DummyClient
             IPAddress ipAddr = ipHost.AddressList[0];
             IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
-            Connector connector= new Connector();
-            connector.Connect(endPoint, () => {return new GameSession();});
+            Connector connector = new Connector();
+            connector.Connect(endPoint, () => { return new GameSession(); });
 
             while (true)
             {
                 try
                 {
-             
+
                 }
                 catch (Exception e)
                 {
