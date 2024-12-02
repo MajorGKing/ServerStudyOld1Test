@@ -1,26 +1,25 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "Run DummyClient",
-        "type": "shell",
-        "command": "dotnet run --project ${workspaceFolder}/DummyClient/DummyClient.csproj",
-        "presentation": {
-          "reveal": "silent",
-          "panel": "new"  // This ensures the task runs in a new terminal panel
-        },
-        "problemMatcher": []
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run DummyClient",
+      "type": "shell",
+      "command": "dotnet run --project ${workspaceFolder}/DummyClient/DummyClient.csproj",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "new"  // Runs in a new terminal
       },
-      {
-        "label": "Run ServerCore",
-        "type": "shell",
-        "command": "dotnet run --project ${workspaceFolder}/ServerCore/ServerCore.csproj",
-        "presentation": {
-          "reveal": "silent",
-          "panel": "new"  // This ensures the task runs in a new terminal panel
-        },
-        "problemMatcher": []
-      }
-    ]
-  }
-  
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Server",
+      "type": "shell",
+      "command": "dotnet run --project ${workspaceFolder}/Server/Server.csproj",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "new"  // Runs in a new terminal
+      },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
+﻿using System.Net;
 using System.Text;
 using ServerCore;
 
-namespace ServerCore
+namespace Server
 {
     class GameSession : Session
     {
