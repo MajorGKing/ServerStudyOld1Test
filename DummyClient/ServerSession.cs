@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using ServerCore;
@@ -19,38 +20,67 @@ namespace DummyClient
     class PlayerInfoReq : Packet
     {
         public long playerId;
+        public string name;
         
         public PlayerInfoReq()
         {
             this.packetId = (ushort)PacketID.PlayerInfoReq;
         }
 
-        public override void Read(ArraySegment<byte> s)
+        public override void Read(ArraySegment<byte> segment)
         {
-                        ushort count = 0;
+            ushort count = 0;
+
+            ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+
             //ushort size = BitConverter.ToUInt16(s.Array, s.Offset);
-            count += 2;
+            count += sizeof(ushort);
             //ushort id = BitConverter.ToUInt16(s.Array, s.Offset + count);
-            count += 2;
-            BitConverter.ToInt64(new ReadOnlySpan<byte>(s.Array, s.Offset + count, s.Count - count));
-            count += 8;
+            count += sizeof(ushort);
+            this.playerId = BitConverter.ToInt64(s.Slice(count, s.Length - count));
+            count += sizeof(long);
+
+            // string
+            ushort nameLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+            count += sizeof(ushort);
+            this.name = Encoding.Unicode.GetString(s.Slice(count, nameLen));
         }
 
         public override ArraySegment<byte> Write()
         {
             // byte[] sendBuff = Encoding.UTF8.GetBytes($"Hello World! {i}");
 
-            ArraySegment<byte> s = SendBufferHelper.Open(4096);
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
 
-            short count = 0;
+            ushort count = 0;
             bool success = true;
+
+            Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
             //success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), packet.size);
             count += sizeof(ushort);
-            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), (ushort)PacketID.PlayerInfoReq);
+            //success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), (ushort)PacketID.PlayerInfoReq);
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.packetId);
             count += sizeof(ushort);
-            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), this.playerId);
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerId);
             count += sizeof(long);
-            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset, s.Count), count);
+            
+
+            // string
+            // string len [2]
+            // byte []
+            // ushort nameLen = (ushort)Encoding.Unicode.GetByteCount(this.name);
+            // success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), nameLen);
+            // count += sizeof(ushort);
+            // Array.Copy(Encoding.Unicode.GetBytes(this.name), 0, segment.Array, count, nameLen);
+            // count += nameLen;
+
+            ushort nameLen = (ushort) Encoding.Unicode.GetBytes(this.name, 0, name.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), nameLen);
+            count += sizeof(ushort);
+            count += nameLen;
+            
+            success &= BitConverter.TryWriteBytes(s, count);
 
             // byte[] size = BitConverter.GetBytes(packet.size);
             // byte[] packetId = BitConverter.GetBytes(packet.packetId);
@@ -90,7 +120,7 @@ namespace DummyClient
         {
             System.Console.WriteLine($"OnConnected : {endPoint}");
 
-            PlayerInfoReq packet = new PlayerInfoReq(){packetId = (ushort)PacketID.PlayerInfoReq, playerId = 1001};
+            PlayerInfoReq packet = new PlayerInfoReq(){packetId = (ushort)PacketID.PlayerInfoReq, playerId = 1001, name = "ABCD"};
 
             
 
