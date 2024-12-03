@@ -19,15 +19,56 @@ namespace DummyClient
     class PlayerInfoReq : Packet
     {
         public long playerId;
+        
+        public PlayerInfoReq()
+        {
+            this.packetId = (ushort)PacketID.PlayerInfoReq;
+        }
 
         public override void Read(ArraySegment<byte> s)
         {
-            throw new NotImplementedException();
+                        ushort count = 0;
+            //ushort size = BitConverter.ToUInt16(s.Array, s.Offset);
+            count += 2;
+            //ushort id = BitConverter.ToUInt16(s.Array, s.Offset + count);
+            count += 2;
+            BitConverter.ToInt64(new ReadOnlySpan<byte>(s.Array, s.Offset + count, s.Count - count));
+            count += 8;
         }
 
         public override ArraySegment<byte> Write()
         {
-            throw new NotImplementedException();
+            // byte[] sendBuff = Encoding.UTF8.GetBytes($"Hello World! {i}");
+
+            ArraySegment<byte> s = SendBufferHelper.Open(4096);
+
+            short count = 0;
+            bool success = true;
+            //success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), packet.size);
+            count += sizeof(ushort);
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), (ushort)PacketID.PlayerInfoReq);
+            count += sizeof(ushort);
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), this.playerId);
+            count += sizeof(long);
+            success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset, s.Count), count);
+
+            // byte[] size = BitConverter.GetBytes(packet.size);
+            // byte[] packetId = BitConverter.GetBytes(packet.packetId);
+            // byte[] playerId = BitConverter.GetBytes(packet.playerId);
+
+            // ushort count = 0;
+
+            // Array.Copy(size, 0, s.Array, s.Offset + count, 2);
+            // count += 2;
+            // Array.Copy(packetId, 0, s.Array, s.Offset + count, 2);
+            // count += 2;
+            // Array.Copy(playerId, 0, s.Array, s.Offset + count, 8);
+            // count += 8;
+
+            if(success == false)
+                return null;
+
+            return SendBufferHelper.Close(count);
         }
     }
 
@@ -55,37 +96,10 @@ namespace DummyClient
 
             //for (int i = 0; i < 5; i++)
             {
-                // byte[] sendBuff = Encoding.UTF8.GetBytes($"Hello World! {i}");
+                ArraySegment<byte> s = packet.Write();
 
-                ArraySegment<byte> s = SendBufferHelper.Open(4096);
-
-                short count = 0;
-                bool success = true;
-                //success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), packet.size);
-                count += 2;
-                success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), packet.packetId);
-                count += 2;
-                success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset + count, s.Count - count), packet.playerId);
-                count += 8;
-                success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset, s.Count), count);
-
-                // byte[] size = BitConverter.GetBytes(packet.size);
-                // byte[] packetId = BitConverter.GetBytes(packet.packetId);
-                // byte[] playerId = BitConverter.GetBytes(packet.playerId);
-                
-                // ushort count = 0;
-
-                // Array.Copy(size, 0, s.Array, s.Offset + count, 2);
-                // count += 2;
-                // Array.Copy(packetId, 0, s.Array, s.Offset + count, 2);
-                // count += 2;
-                // Array.Copy(playerId, 0, s.Array, s.Offset + count, 8);
-                // count += 8;
-
-                ArraySegment<byte> sendBuff = SendBufferHelper.Close(count);
-
-                if(success)
-                    Send(sendBuff);
+                if(s != null)
+                    Send(s);
             }
         }
 
