@@ -12,13 +12,19 @@ namespace PacketGenerator
 
         static void Main(string[] args)
         {
+            string workspaceFolder = AppDomain.CurrentDomain.BaseDirectory;
+            string pdlPath = Path.Combine(workspaceFolder, "../PDL.xml");
+
             XmlReaderSettings settings = new XmlReaderSettings()
             {
                 IgnoreComments = true,
                 IgnoreWhitespace = true,
             };
 
-            using(XmlReader r = XmlReader.Create("PDL.xml", settings))
+            if(args.Length >= 1)
+                pdlPath = args[0]
+;
+            using(XmlReader r = XmlReader.Create(pdlPath, settings))
             {
                 r.MoveToContent();
 
@@ -30,7 +36,7 @@ namespace PacketGenerator
                 }
 
                 string fileText = string.Format(PacketFormat.fileFormat, packetEnums, genPackets);
-                File.WriteAllText("GenPackets.cs", fileText);
+                File.WriteAllText(workspaceFolder+"../GenPackets.cs", fileText);
             }
         }
 

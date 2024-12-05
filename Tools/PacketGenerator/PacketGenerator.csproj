@@ -4,7 +4,18 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Debug-specific output path -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>bin</OutputPath>
+  </PropertyGroup>
+
+  <!-- Release-specific output path -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>bin</OutputPath>
   </PropertyGroup>
 
 </Project>
