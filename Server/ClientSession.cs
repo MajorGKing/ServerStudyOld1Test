@@ -20,7 +20,7 @@ namespace Server
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
-            PacketManagers.Instance.OnRecvPacket(this, buffer);
+            PacketManager.Instance.OnRecvPacket(this, buffer);
 
             
         }

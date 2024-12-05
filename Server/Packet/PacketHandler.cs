@@ -4,20 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using ServerCore;
 
-namespace Server
+
+class PacketHandler
 {
-    class PacketHandler
+    public static void C_PlayerInfoReqHandler(PacketSession session, IPacket packet)
     {
-        public static void PlayerInfoReqHandler(PacketSession session, IPacket packet)
+        C_PlayerInfoReq p = packet as C_PlayerInfoReq;
+
+        System.Console.WriteLine($"PlayerInfoReq: {p.playerId} {p.name}");
+
+        foreach (C_PlayerInfoReq.Skill skill in p.skills)
         {
-            PlayerInfoReq p = packet as PlayerInfoReq;
-
-            System.Console.WriteLine($"PlayerInfoReq: {p.playerId} {p.name}");
-
-            foreach (PlayerInfoReq.Skill skill in p.skills)
-            {
-                System.Console.WriteLine($"Skill ({skill.id}) ({skill.level}) ({skill.duration})");
-            }
+            System.Console.WriteLine($"Skill ({skill.id}) ({skill.level}) ({skill.duration})");
         }
     }
 }
