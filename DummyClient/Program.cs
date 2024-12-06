@@ -19,7 +19,7 @@ namespace DummyClient
 
             connector.Connect(endPoint, 
             () => { return SessionManager.Instance.Generate(); },
-            130);
+            100);
 
             while (true)
             {
