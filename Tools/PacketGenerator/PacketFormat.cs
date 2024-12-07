@@ -69,7 +69,8 @@ public class PacketManager
 
         // {0} 패킷 이름
         public static string managerRegisterFormat =
-@"              _makeFunc.Add((ushort)PacketID.{0}, MakePacket<{0}>);
+@"
+                _makeFunc.Add((ushort)PacketID.{0}, MakePacket<{0}>);
                 _handler.Add((ushort)PacketID.{0}, PacketHandler.{0}Handler);";
 
         // {0} 패킷 이름/번호 목록
@@ -110,7 +111,7 @@ public interface IPacket
         // {3} 맴버 변수 Write
         public static string packetFormat =
 @"
-class {0} : IPacket
+public class {0} : IPacket
 {{
     {1}
 
