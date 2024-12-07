@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -22,11 +23,31 @@ public class NetworkManager : MonoBehaviour
             connector.Connect(endPoint, 
             () => { return _session;},
             1);
+
+            StartCoroutine("CoSendPacket");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        IPacket packet = PacketQueue.Instane.Pop();
+        if(packet != null)
+        {
+            PacketManager.Instance.HandlePacket(_session, packet);
+        }
+    }
+
+    IEnumerator CoSendPacket()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(3.0f);
+
+            C_Chat chatPakcet = new C_Chat();
+            chatPakcet.chat = "Hello Unity !";
+            ArraySegment<byte> segment = chatPakcet.Write();
+
+            _session.Send(segment);
+        }
     }
 }
