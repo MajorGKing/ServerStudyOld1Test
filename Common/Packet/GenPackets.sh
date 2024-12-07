@@ -9,9 +9,10 @@ SOURCE_GENPACKETS_CS="$SCRIPT_DIR/../../Tools/PacketGenerator/bin/GenPackets.cs"
 SOURCE_SERVER_PACKETMANAGER_CS="$SCRIPT_DIR/../../Tools/PacketGenerator/bin/ServerPacketManager.cs"
 SOURCE_CLIENT_PACKETMANAGER_CS="$SCRIPT_DIR/../../Tools/PacketGenerator/bin/ClientPacketManager.cs"
 
-# Define the two target directories for copying
+# Define the target directories for copying
 TARGET_DIR1="$SCRIPT_DIR/../../Server/Packet"
 TARGET_DIR2="$SCRIPT_DIR/../../DummyClient/Packet"
+TARGET_DIR3="$SCRIPT_DIR/../../Client/Assets/Scripts/Packet"
 
 # Ensure the source DLL exists
 if [[ ! -f "$SOURCE_DLL" ]]; then
@@ -65,6 +66,15 @@ else
     exit 1
 fi
 
+# Copy GenPackets.cs to the third target directory (Client/Assets/Scripts/Packet) and overwrite if it exists
+cp -f "$SOURCE_GENPACKETS_CS" "$TARGET_DIR3"
+if [[ $? -eq 0 ]]; then
+    echo "Successfully copied GenPackets.cs to $TARGET_DIR3"
+else
+    echo "Failed to copy GenPackets.cs to $TARGET_DIR3"
+    exit 1
+fi
+
 # Copy ServerPacketManager.cs to the first target directory (Server/Packet) and overwrite if it exists
 cp -f "$SOURCE_SERVER_PACKETMANAGER_CS" "$TARGET_DIR1"
 if [[ $? -eq 0 ]]; then
@@ -74,12 +84,23 @@ else
     exit 1
 fi
 
+# Copy ServerPacketManager.cs to the third target directory (Client/Assets/Scripts/Packet) is not needed.
+
 # Copy ClientPacketManager.cs to the second target directory (DummyClient/Packet) and overwrite if it exists
 cp -f "$SOURCE_CLIENT_PACKETMANAGER_CS" "$TARGET_DIR2"
 if [[ $? -eq 0 ]]; then
     echo "Successfully copied ClientPacketManager.cs to $TARGET_DIR2"
 else
     echo "Failed to copy ClientPacketManager.cs to $TARGET_DIR2"
+    exit 1
+fi
+
+# Copy ClientPacketManager.cs to the third target directory (Client/Assets/Scripts/Packet) and overwrite if it exists
+cp -f "$SOURCE_CLIENT_PACKETMANAGER_CS" "$TARGET_DIR3"
+if [[ $? -eq 0 ]]; then
+    echo "Successfully copied ClientPacketManager.cs to $TARGET_DIR3"
+else
+    echo "Failed to copy ClientPacketManager.cs to $TARGET_DIR3"
     exit 1
 fi
 
