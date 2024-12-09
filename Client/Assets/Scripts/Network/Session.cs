@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace ServerCore
 {
@@ -33,7 +31,7 @@ namespace ServerCore
                 buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);
             }
             if(packetCount > 1)
-                System.Console.WriteLine($"패킷 모아보내기 : {packetCount}");
+                UnityEngine.Debug.Log($"패킷 모아보내기 : {packetCount}");
 
             return processLen;
         }
@@ -140,7 +138,7 @@ namespace ServerCore
             }
             catch(Exception e)
             {
-                System.Console.WriteLine($"RegisterSend Failed {e}");
+                UnityEngine.Debug.Log($"RegisterSend Failed {e}");
             }
         }
 
@@ -157,12 +155,14 @@ namespace ServerCore
 
                         OnSend(_sendArgs.BytesTransferred);
 
+                        UnityEngine.Debug.Log("Sended!");
+
                         if (_sendQueue.Count > 0)
                             RegisterSend();
                     }
                     catch (Exception e)
                     {
-                        System.Console.WriteLine($"OnSendCompleted Failed {e}");
+                        UnityEngine.Debug.Log($"OnSendCompleted Failed {e}");
                     }
                 }
                 else
@@ -189,7 +189,7 @@ namespace ServerCore
             }
             catch (Exception e)
             {
-                System.Console.WriteLine($"RegisterRecv Fail {e}");
+                UnityEngine.Debug.Log($"RegisterRecv Fail {e}");
             }
         }
 
@@ -222,7 +222,7 @@ namespace ServerCore
                 }
                 catch (Exception e)
                 {
-                    System.Console.WriteLine($"OnRecvCompleted Failed {e}");
+                    UnityEngine.Debug.Log($"OnRecvCompleted Failed {e}");
                 }
             }
             else
