@@ -36,8 +36,7 @@ public class PlayerManager
     }
 
     public void Move(S_BroadcastMove packet)
-    {
-        Debug.Log("Move Called");
+    {        
         if(_myPlayer.PlayerId == packet.playerId)
         {
             _myPlayer.transform.position = new Vector3(packet.posX, packet.posY, packet.posZ);
@@ -54,9 +53,14 @@ public class PlayerManager
 
     public void EnterGame(S_BroadcastEnterGame packet)
     {
-        Debug.Log("Enter Called");
+        Debug.Log("Enter Game!");
+        Debug.Log("packet.playerId : "  + packet.playerId);
+        Debug.Log("_myPlayer.PlayerId : "  + _myPlayer.PlayerId);
+
         if (packet.playerId == _myPlayer.PlayerId)
             return;
+
+        Debug.Log("Enter Game! & Spwn");
 
         Object obj = Resources.Load("Player");
         GameObject go = Object.Instantiate(obj) as GameObject;

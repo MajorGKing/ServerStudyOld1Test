@@ -14,8 +14,6 @@ class PacketHandler
         S_BroadcastEnterGame pkt = packet as S_BroadcastEnterGame;
         ServerSession serverSession = session as ServerSession;
 
-        Debug.Log("S_BroadcastEnterGameHandler");
-
         PlayerManager.Instance.EnterGame(pkt);
     }
 
@@ -23,8 +21,6 @@ class PacketHandler
     {
         S_BroadcastLeaveGame pkt = packet as S_BroadcastLeaveGame;
         ServerSession serverSession = session as ServerSession;
-
-        Debug.Log("S_BroadcastLeaveGameHandler");
 
         PlayerManager.Instance.LeaveGame(pkt);
     }
@@ -34,8 +30,6 @@ class PacketHandler
         S_PlayerList pkt = packet as S_PlayerList;
         ServerSession serverSession = session as ServerSession;
 
-        Debug.Log("S_PlayerListHandler");
-
         PlayerManager.Instance.Add(pkt);
     }
 
@@ -43,8 +37,6 @@ class PacketHandler
     {
         S_BroadcastMove pkt = packet as S_BroadcastMove;
         ServerSession serverSession = session as ServerSession;
-
-        Debug.Log("S_BroadcastMoveHandler");
 
         PlayerManager.Instance.Move(pkt);
     }

@@ -13,7 +13,8 @@ public class NetworkManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-            string host = Dns.GetHostName();
+            //string host = Dns.GetHostName();
+            string host = "127.0.0.1"; // For Ip.4
             IPHostEntry ipHost = Dns.GetHostEntry(host);
             IPAddress ipAddr = ipHost.AddressList[0];
             IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);

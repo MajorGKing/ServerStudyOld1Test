@@ -30,8 +30,8 @@ namespace ServerCore
                 processLen += dataSize;
                 buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);
             }
-            if(packetCount > 1)
-                UnityEngine.Debug.Log($"패킷 모아보내기 : {packetCount}");
+            //if(packetCount > 1)
+                //UnityEngine.Debug.Log($"패킷 모아보내기 : {packetCount}");
 
             return processLen;
         }
@@ -154,8 +154,6 @@ namespace ServerCore
                         _pendingList.Clear();
 
                         OnSend(_sendArgs.BytesTransferred);
-
-                        UnityEngine.Debug.Log("Sended!");
 
                         if (_sendQueue.Count > 0)
                             RegisterSend();

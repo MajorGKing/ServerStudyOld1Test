@@ -10,8 +10,6 @@ public class PacketQueue
 
     public void Push(IPacket packet)
     {
-        Debug.Log("Push Queue!");
-
         lock (_lock)
         {
             _packetQueue.Enqueue(packet);

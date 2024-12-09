@@ -15,18 +15,15 @@ namespace DummyClient
         public override void OnConnected(EndPoint endPoint)
         {
             UnityEngine.Debug.Log($"OnConnected : {endPoint}");
-            UnityEngine.Debug.Log($"OnConnected : {endPoint}");
         }
 
         public override void OnDisconnected(EndPoint endPoint)
         {
             UnityEngine.Debug.Log($"OnDisconnected : {endPoint}");
-            UnityEngine.Debug.Log($"OnDisconnected : {endPoint}");
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
-            UnityEngine.Debug.Log("OnRecvPacket");
             PacketManager.Instance.OnRecvPacket(this, buffer, (s, p) => PacketQueue.Instane.Push(p));
         }
 
