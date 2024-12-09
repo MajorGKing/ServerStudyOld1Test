@@ -11,12 +11,13 @@ public class PlayerManager
 
     public void Add(S_PlayerList packet)
     {
-        Debug.Log("Add Called");
+        ///Debug.Log("Add Called");
         Object obj = Resources.Load("Player");
 
         foreach(S_PlayerList.Player p in packet.players)
         {
             GameObject go = Object.Instantiate(obj) as GameObject;
+            //Debug.Log($"P {p.isSelf} : " + p.playerId);
 
             if(p.isSelf)
             {
@@ -51,16 +52,10 @@ public class PlayerManager
         }
     }
 
-    public void EnterGame(S_BroadcastEnterGame packet)
+    public void  EnterGame(S_BroadcastEnterGame packet)
     {
-        Debug.Log("Enter Game!");
-        Debug.Log("packet.playerId : "  + packet.playerId);
-        Debug.Log("_myPlayer.PlayerId : "  + _myPlayer.PlayerId);
-
         if (packet.playerId == _myPlayer.PlayerId)
             return;
-
-        Debug.Log("Enter Game! & Spwn");
 
         Object obj = Resources.Load("Player");
         GameObject go = Object.Instantiate(obj) as GameObject;

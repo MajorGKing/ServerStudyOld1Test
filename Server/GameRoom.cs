@@ -59,6 +59,7 @@ namespace Server
 
             // 신규 클라이언트의 입장을 모두에게 알림
             S_BroadcastEnterGame enter = new S_BroadcastEnterGame();
+            enter.playerId = session.SessionId;
             enter.posX = 0;
             enter.posY = 0;
             enter.posZ = 0;
